@@ -20,4 +20,13 @@ export class App {
       this.message = error;
     }
   }
+
+  finishOrder(){
+    try {
+      this.order.finish();
+      this.message = 'Orden finalizada correctamente';
+    }catch (e) {
+      this.message= e.message;
+    }
+  }
 }
