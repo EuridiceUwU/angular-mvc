@@ -1,11 +1,23 @@
 import { Component, signal } from '@angular/core';
+import {OrderProduction} from './models/order-production.model';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('control-production');
+  order = new OrderProduction(1,'Rondanas de cuero', 300, 500);
+  message = '';
+
+  startOrder(){
+    try {
+      this.order.start();
+      this.message = 'Orden Iniciada correctamente'
+    } catch (error:any){
+      this.message = error;
+    }
+  }
 }
