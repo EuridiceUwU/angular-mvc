@@ -25,7 +25,7 @@ export class App {
     try {
       this.order.finish();
       this.message = 'Orden finalizada correctamente';
-    }catch (e) {
+    }catch (e: any) {
       this.message= e.message;
     }
   }
