@@ -44,6 +44,4 @@ export class OrderProduction {
     }
     return 'Alta';
   }
-
-
 }

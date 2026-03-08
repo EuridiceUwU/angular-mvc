@@ -1,8 +1,8 @@
-import { Component, signal } from '@angular/core';
-import {OrderProduction} from './models/order-production.model';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {OrderService} from './services/order.service';
+import { Component } from '@angular/core';
+import { OrderProduction } from './models/order-production.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { OrderService } from './services/order.service';
 
 @Component({
   selector: 'app-root',
@@ -11,50 +11,44 @@ import {OrderService} from './services/order.service';
   styleUrl: './app.css'
 })
 export class App {
-  order : OrderProduction;
+
+  orders: OrderProduction[] = [];
   message = '';
-  newQantity = 0;
 
   constructor(private orderService: OrderService) {
-    this.order = this.orderService.getOrder();
+    this.orders = this.orderService.getOrders();
   }
 
-  start(){
+  start(order: OrderProduction) {
     try {
-      this.orderService.startOrder()
-      this.message = 'Orden iniciada corretamente';
-    } catch (error: any){
+      this.orderService.startOrder(order);
+      this.message = 'Orden iniciada correctamente';
+    } catch (error: any) {
       this.message = error.message;
     }
   }
-  finish(){
+
+  finish(order: OrderProduction) {
     try {
-      this.orderService.finishOrder()
-      this.message = 'Orden finalizada corretamente';
-    } catch (error: any){
+      this.orderService.finishOrder(order);
+      this.message = 'Orden finalizada correctamente';
+    } catch (error: any) {
       this.message = error.message;
     }
   }
-  updateQantity(){
-    this.order.quantity = this.newQantity;
+
+  updateQuantity(order: OrderProduction) {
+    // aquí solo se recalcula el estado automáticamente
+    if (order.quantity > order.machineCapacity) {
+      this.message = 'La cantidad excede la capacidad de la máquina';
+    } else {
+      this.message = '';
+    }
   }
 
+  getProgress(order: OrderProduction): number {
+    const progress = (order.quantity / order.machineCapacity) * 100;
+    return Math.min(progress, 100); // nunca más de 100%
+  }
 
-  // startOrder(){
-  //   try {
-  //     this.order.start();
-  //     this.message = 'Orden Iniciada correctamente'
-  //   } catch (error:any){
-  //     this.message = error;
-  //   }
-  // }
-  //
-  // finishOrder(){
-  //   try {
-  //     this.order.finish();
-  //     this.message = 'Orden finalizada correctamente';
-  //   }catch (e: any) {
-  //     this.message= e.message;
-  //   }
-  // }
 }

@@ -5,18 +5,23 @@ import { OrderProduction } from '../models/order-production.model';
   providedIn: 'root'
 })
 export class OrderService {
-  order = new OrderProduction(1,'Rondanas de cuero', 300, 500, false);
 
+  orders: OrderProduction[] = [
+    new OrderProduction(1,'Rondanas de cuero',300,500,false),
+    new OrderProduction(2,'Tornillos',200,400,false),
+    new OrderProduction(3,'Tuercas',450,500,false)
+  ];
 
-  getOrder(): OrderProduction {
-    return this.order;
+  getOrders(): OrderProduction[] {
+    return this.orders;
   }
 
-  finishOrder(): void {
-    this.order.finish();
+  startOrder(order: OrderProduction): void {
+    order.start();
   }
 
-  startOrder(): void {
-    this.order.start();
+  finishOrder(order: OrderProduction): void {
+    order.finish();
   }
+
 }

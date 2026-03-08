@@ -1,93 +1,81 @@
 <div class="container mt-5">
-  <div class="card shadow">
-    <div class="card-header bg-primary text-white">Sistema de Orden de Producción</div>
 
-    <div class="card-body">
-      <!-- Interpolación -->
-      <h4>{{ order.product }}</h4>
+  @for (order of orders; track order.id) {
 
-      <p>Cantidad actual: {{ order.quantity }}</p>
-      <p>Capacidad máquina: {{ order.machineCapacity }}</p>
-
-      <!-- Property Binding -->
-      <p>
-        Estado:
-        <span
-          class="badge"
-          [ngClass]="{
-            'bg-secondary': order.state === 'pendiente',
-            'bg-warning': order.state === 'en_proceso',
-            'bg-success': order.state === 'finalizada',
-          }"
-        >
-          {{ order.state }}
-        </span>
-      </p>
-
-      <!-- Two-way Binding -->
-      <div class="mb-3">
-        <label>Nueva Cantidad</label>
-        <input type="number" class="form-control" [(ngModel)]="newQantity" />
+    <div class="card shadow mb-4">
+      <div class="card-header bg-primary text-white">
+        Orden #{{ order.id }}
       </div>
 
-      <button class="btn btn-info me-2" (click)="updateQantity()">Actualizar Cantidad</button>
+      <div class="card-body">
 
-      <!-- Event Binding -->
-      <button class="btn btn-success me-2" (click)="start()">Iniciar</button>
+        <h4>{{ order.product }}</h4>
 
-      <button
-        class="btn btn-danger"
-        [disabled]="order.state !== 'en_proceso'"
-        (click)="finish()"
-      >
-        Finalizar
-      </button>
+        <p>Cantidad actual: {{ order.quantity }}</p>
+        <p>Capacidad máquina: {{ order.machineCapacity }}</p>
 
-      <!-- Implementación del bloque de control dee flujo @if-->
-      @if (message) {
-        <div class="alert alert-warning mt-3">
-          {{ message }}
+        <p>
+          Estado:
+          <span
+            class="badge"
+            [ngClass]="{
+            'bg-secondary': order.state === 'pendiente',
+            'bg-warning': order.state === 'en_proceso',
+            'bg-success': order.state === 'finalizada'
+          }"
+          >
+          {{ order.state }}
+        </span>
+        </p>
+
+        <!-- Input que actualiza automáticamente -->
+        <div class="mb-3">
+          <label>Nueva Cantidad</label>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="order.quantity"
+            (ngModelChange)="updateQuantity(order)"
+          />
         </div>
-      }
 
-      <!-- Uso de método del modelo -->
-      <p class="mt-3">
-        Eficiencia:
-        <strong>{{ order.getEfficiency() }}</strong>
-      </p>
+        <button class="btn btn-success me-2" (click)="start(order)">
+          Iniciar
+        </button>
+
+        <button
+          class="btn btn-danger"
+          [disabled]="order.state !== 'en_proceso'"
+          (click)="finish(order)"
+        >
+          Finalizar
+        </button>
+
+        <!-- Barra de progreso -->
+        <div class="progress mt-3">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [style.width.%]="getProgress(order)"
+          >
+            {{ getProgress(order) | number:'1.0-0' }}%
+          </div>
+        </div>
+
+        <p class="mt-3">
+          Eficiencia:
+          <strong>{{ order.getEfficiency() }}</strong>
+        </p>
+
+      </div>
     </div>
-  </div>
+
+  }
+
+  @if (message) {
+    <div class="alert alert-warning mt-3">
+      {{ message }}
+    </div>
+  }
+
 </div>
-
-<!--<div class="container mt-5">-->
-<!--  <div class="card shadow">-->
-<!--    <div class="card-header bg-primary text white">Control de Orden de Producción</div>-->
-<!--    <div class="card-body">-->
-<!--      <h5> Producto: {{order.product}}</h5>-->
-<!--      <p>Cantidad: {{order.quantity}}</p>-->
-<!--      <p>Capacidad de máquina: {{order.machineCapacity}}</p>-->
-<!--      <p>-->
-<!--        Estado:-->
-<!--        <span class="badge bg-info text-dark">-->
-<!--          {{order.state}}-->
-<!--        </span>-->
-<!--      </p>-->
-<!--      <p>-->
-<!--        Eficiencia:-->
-<!--        <strong>-->
-<!--          {{order.getEfficiency()}}-->
-<!--        </strong>-->
-<!--      </p>-->
-<!--      <div class="mt-3">-->
-<!--        <button class="btn btn-success me-2" (click)="startOrder()">Iniciar</button>-->
-<!--      </div>-->
-<!--      <div class="mt-3">-->
-<!--        <button class="btn btn-danger" (click)="finishOrder()">Finalizar</button>-->
-<!--      </div>-->
-<!--      @if (message) {-->
-<!--        <div class="alert alert-warning mt-3">{{message}}</div>-->
-<!--      }-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-
